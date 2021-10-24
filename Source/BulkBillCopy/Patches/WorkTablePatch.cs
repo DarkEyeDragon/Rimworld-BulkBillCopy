@@ -3,6 +3,9 @@ using System.Linq;
 using BulkBillCopy.Textures;
 using BulkBillCopy.Utils;
 using HarmonyLib;
+#if DEBUG
+using HotSwap;
+#endif
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -13,6 +16,9 @@ namespace BulkBillCopy.Patches
     
     [HarmonyPatch(typeof(ITab_Bills))]
     [HarmonyPatch("FillTab")]
+#if DEBUG
+    [HotSwappable]
+#endif
     public class WorkTablePatch
     {
 
@@ -46,7 +52,7 @@ namespace BulkBillCopy.Patches
 
             if (BillsUtil.Bills.Count > 0)
             {
-                if (workTable.def.AllRecipes.Contains(BillsUtil.Bills[0].recipe))
+                if (workTable.def.AllRecipes.Contains(BillsUtil.Bills[0].recipe) && workTable.billStack.Bills.Count < BillStack.MaxCount)
                 {
                     if (Widgets.ButtonImageFitted(actionPasteAll, TextureHandler.PasteAll, Color.white))
                     {
@@ -72,7 +78,9 @@ namespace BulkBillCopy.Patches
                 }
                 else
                 {
-                    Widgets.ButtonImageFitted(actionPasteAll, TexButton.Paste, Color.grey);
+                    GUI.color = Color.gray;
+                    Widgets.DrawTextureFitted(actionPasteAll, TextureHandler.PasteAll, 1);
+                    GUI.color = Color.white;
                     pasteTooltipText = NoPasteTooltipText;
                 }
             }
