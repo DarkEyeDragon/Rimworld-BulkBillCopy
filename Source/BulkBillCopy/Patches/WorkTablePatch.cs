@@ -35,7 +35,7 @@ namespace BulkBillCopy.Patches
         
         static bool Prefix(ITab_Bills __instance)
         {
-            var actionCopyAll = new Rect(WinSize.x - PasteX - 50, PasteY, PasteSize, PasteSize);
+            var actionCopyAll = new Rect(WinSize.x - PasteX - 60, PasteY, PasteSize, PasteSize);
             var actionPasteAll = new Rect(WinSize.x - PasteX - 30, PasteY, PasteSize, PasteSize);
 
             var workTable = Traverse.Create(__instance).Property("SelTable").GetValue<Building_WorkTable>();
